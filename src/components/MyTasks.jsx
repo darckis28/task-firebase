@@ -11,11 +11,14 @@ function MyTasks() {
       icon: "🍔",
       description: "Comer mas sano",
     },
+    {
+      icon: "🚨",
+      description: "Ir a conseguir mas cosas",
+    },
   ]);
-  console.log(tasks);
   return (
     <div className="container p-4">
-      <h2 className="text-3xl text-slate-700 font-bold">My Tasks</h2>
+      <h2 className="text-3xl text-slate-700 font-bold mb-4">My Tasks</h2>
       <ul>
         {tasks.map((task, idx) => (
           <List

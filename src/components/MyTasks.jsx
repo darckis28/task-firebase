@@ -1,30 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import List from "./list/List";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase/firebase";
 
 function MyTasks() {
-  const [tasks, setTasks] = useState([
-    {
-      icon: "🛩",
-      description: "Viajar por el mundo",
+  const [tasks, setTasks] = useState([]);
+  useEffect(
+    () => async () => {
+      try {
+        const database = await getDocs(collection(db, "tasks"));
+        const datos = [];
+        database.forEach((data) => datos.push({ ...data.data(), id: data.id }));
+        setTasks(datos);
+      } catch (e) {
+        console.log(e);
+      }
     },
-    {
-      icon: "🍔",
-      description: "Comer mas sano",
-    },
-    {
-      icon: "🚨",
-      description: "Ir a conseguir mas cosas",
-    },
-  ]);
+    [tasks]
+  );
   return (
     <div className="container p-4">
       <h2 className="text-3xl text-slate-700 font-bold mb-4">My Tasks</h2>
       <ul>
-        {tasks.map((task, idx) => (
+        {!tasks.length > 0 && <h1>cargando....</h1>}
+        {tasks?.map((task) => (
           <List
-            key={idx}
+            key={task.id}
             description={task.description}
             icon={task.icon}
+            id={task.id}
           />
         ))}
       </ul>

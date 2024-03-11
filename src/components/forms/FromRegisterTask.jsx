@@ -1,17 +1,27 @@
 import { useState } from "react";
+// import { v4 as uuidv4 } from "uuid";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../firebase/firebase";
+import { useNavigate } from "react-router-dom";
 
 const icons = ["🍔", "👷‍♂️", "🛩", "🚨"];
 function FromRegisterTask() {
   const [description, setDescription] = useState("");
   const [icon, setIcon] = useState("");
-
-  const crear = (e) => {
+  const navigate = useNavigate();
+  const crear = async (e) => {
     e.preventDefault();
+    if (icon === "" || description === "") return;
     const newTask = {
       icon,
       description,
     };
-    console.log(newTask);
+    try {
+      const docRef = await addDoc(collection(db, "tasks"), newTask);
+      navigate("/dashboard/tasks");
+    } catch (e) {
+      console.log(e);
+    }
   };
   return (
     <form
